@@ -1,0 +1,9 @@
+apiVersion: v2
+name: helm-prometheus-prod-operator
+
+type: application
+
+
+version: 0.1.0 # different chart for prod 
+
+appVersion: "1.0"

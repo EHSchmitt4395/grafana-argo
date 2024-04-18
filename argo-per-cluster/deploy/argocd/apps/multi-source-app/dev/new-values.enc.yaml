@@ -1,0 +1,60 @@
+cluster:
+    name: my-cluster-name
+externalServices:
+    prometheus:
+        host: https://URL
+        basicAuth:
+            username: "USERNAME"
+            password: key=
+    loki:
+        host: https://URL
+        basicAuth:
+            username: "USERNAME"
+            password: key=
+    tempo:
+        host: https://URL
+        basicAuth:
+            username: "USERNAME"
+            password: key=
+opencost:
+    opencost:
+        exporter:
+            defaultClusterId: my-cluster
+        prometheus:
+            external:
+                url: https://URL
+traces:
+    enabled: true
+grafana-agent:
+    agent:
+        extraPorts:
+            - name: otlp-grpc
+              port: 4317
+              targetPort: 4317
+              protocol: TCP
+            - name: otlp-http
+              port: 4318
+              targetPort: 4318
+              protocol: TCP
+            - name: zipkin
+              port: 9411
+              targetPort: 9411
+              protocol: TCP
+
+# These mounts are critical for docker desktop and local kubernetes deployments with the docker desktop runtime 
+grafana-agent-logs:
+    agent:
+        mounts:
+            dockercontainers: true
+            extra:
+                - name: dockerlib
+                  mountPath: /var/lib/docker
+                  # Assuming you only need read access
+                  readOnly: true
+    controller:
+        volumes:
+            extra:
+                - name: dockerlib
+                  hostPath:
+                    path: /var/lib/docker
+                    type: Directory

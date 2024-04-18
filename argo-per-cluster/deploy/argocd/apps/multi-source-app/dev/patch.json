@@ -1,0 +1,8 @@
+[
+    {
+      "op": "replace",
+      "path": "/spec/sources/0/helm/valueFiles/0",
+      "value": "$values/argo-per-cluster/deploy/argocd/apps/multi-source-app/base/new-values.enc.yaml"
+    }
+  ]
+  

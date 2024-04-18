@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jira
+  namespace: argocd
+spec:
+  destination:
+    namespace: jira
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      parameters:
+      - name: ingress.create
+        value: "true"
+    path: src/main/charts/jira
+    repoURL: https://github.com/atlassian/data-center-helm-charts
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+spec:
+  destination:
+    name: ''
+    namespace: grafana
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: ''
+    repoURL: 'https://grafana.github.io/helm-charts'
+    targetRevision: 0.7.1
+    chart: k8s-monitoring
+    helm:
+      valueFiles:
+        - 'secrets://values.enc.yaml'
+      parameters:
+        - name: cluster.name
+          value: my-cluster
+  sources:  # 2 sources ref values as secret 
+    - repoURL: 'https://grafana.github.io/helm-charts'
+      chart: k8s-monitoring
+      targetRevision: 0.7.1
+      helm:
+        valueFiles:
+          - $values/argo-per-cluster/deploy/argocd/apps/multi-source-app/base/values.enc.yaml
+    - repoURL: 'https://github.com/EHSchmitt4395/grafana-argo.git'
+      targetRevision: HEAD
+      ref: values 
+  project: default
+  syncPolicy: 
+    automated:
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

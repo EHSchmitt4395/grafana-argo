@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-git
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    # matrix 'parent' generator
+    - matrix:
+        generators:
+          # git generator, 'child' #1
+          - git:
+              repoURL: https://this-repo.git
+              revision: HEAD
+              directories:
+                - path: master-argo-many-env-zones/deploy/argocd/apps/*
+          # cluster generator, 'child' #2
+          - clusters:
+              selector:
+                matchLabels:
+                  argocd.argoproj.io/secret-type: cluster  #derived from argocd cluster secret
+                  # https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-Cluster/ 
+  template:
+    metadata:
+      name: '{{.path.basename}}-{{.name}}'
+    spec:
+      project: '{{index .metadata.labels "environment"}}'
+      source:
+        repoURL: https://this-repo.git
+        targetRevision: HEAD
+        path: '{{.path.path}}'
+      destination:
+        server: '{{.server}}'
+        namespace: '{{.path.basename}}'

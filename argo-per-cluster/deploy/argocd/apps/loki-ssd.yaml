@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-ssd
+spec:
+  destination:
+    name: ''
+    namespace: loki-ssd
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: production/helm/loki
+    repoURL: 'https://github.com/grafana/loki.git'
+    targetRevision: v2.9.4
+    helm:
+      parameters:
+        - name: minio.enabled
+          value: 'true'
+        - name: backend.replicas
+          value: '2'
+        - name: read.replicas
+          value: '2'
+        - name: write.replicas
+          value: '2'
+        - name: ingress.enabled
+          value: 'true'
+        - name: ingress.ingressClassName
+          value: nginx
+        - name: backend.affinity
+          value: 'podAntiAffinity: {}'
+        - name: gateway.affinity
+          value: 'podAntiAffinity: {}'
+        - name: read.affinity
+          value: 'podAntiAffinity: {}'
+        - name: write.affinity
+          value: 'podAntiAffinity: {}'
+        - name: loki.auth_enabled
+          value: 'false'
+        - name: gateway.replicas
+          value: '2'
+  sources: []
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+

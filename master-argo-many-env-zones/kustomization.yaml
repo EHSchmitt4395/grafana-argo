@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+
+resources:
+- https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+- ./role.yaml
+- ./apps/argocd.yaml
+# for multi cluster/env from signle management argocd  -- the other direc again shows an argocd per environment, or one per workload cluster. 
+- ./matrix-ex-gen+list.yaml #applicationset 
+- ./matrix-ex-git+cluster.yaml #applicationset 
+- ./git-gen-ex.yaml #applicationset 
+patchesStrategicMerge:
+- argocd-repo-server.yaml  # we patch argocd origin with our deployment that enables encrypted secrets 
+- ./argocd-cm.yaml

@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: all-apps-deployment
+spec:
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: 'https://your-config-repo.git'
+              revision: HEAD
+              directories:
+                - path: master-argo-many-env-zones/deploy/argocd/apps/*/*
+          - list:
+              elements:
+                - env: dev
+                  clusterURL: 'https://kubernetes.default.svc'
+                - env: stage
+                  clusterURL: 'https://kubernetes.default.svc'
+                - env: prod
+                  clusterURL: 'https://kubernetes.default.svc'
+  template:
+    metadata:
+      name: '{{path.basename}}-{{env}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://helm-repo-for-{{path.basename}}.git'
+        targetRevision: HEAD
+        chart: '{{path.basename}}'
+        helm:
+          values: '{{path}}/values.yaml'
+      destination:
+        server: '{{clusterURL}}'
+        namespace: '{{path.basename}}'
+      source:
+        repoURL: 'https://your-config-repo.git'
+        path: 'applications/{{path.basename}}/{{env}}'
+        targetRevision: HEAD
+        kustomize: {}

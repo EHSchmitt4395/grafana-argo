@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datadog
+spec:
+  destination:
+    name: ''
+    namespace: datadog
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: ''
+    repoURL: 'https://helm.datadoghq.com'
+    targetRevision: 3.49.8
+    chart: datadog
+  sources:
+    - repoURL: 'https://helm.datadoghq.com'
+      chart: datadog
+      targetRevision: 3.49.8
+      helm:
+        valueFiles:
+          - $values/deploy/argocd/apps/datadog-values.enc.yaml
+    - repoURL: 'https://github.com/EHSchmitt4395/grafana-argo.git'
+      targetRevision: HEAD
+      ref: values
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
