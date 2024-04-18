@@ -5,12 +5,12 @@ namespace: argocd
 resources:
 - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 - ./role.yaml
-- ../argocd/apps/metrics-server.yaml
-- ../argocd/apps/loki-ssd.yaml
-- ../argocd/apps/nginx.yaml
-- ../argocd/apps/argocd.yaml
+- ../../argocd/apps/metrics-server.yaml 
+- ../../argocd/apps/loki-ssd.yaml
+- ../../argocd/apps/nginx.yaml
+- ../../argocd/apps/argocd.yaml
 # from here we can point to env specific direcs. these will build off a base direc, and patch via overlay
-- ../argocd/apps/multi-source-app/gcp/
+- ../../argocd/apps/multi-source-app/stage/
 patchesStrategicMerge:
 - argocd-repo-server.yaml  # we patch argocd origin with our deployment that enables encrypted secrets 
 - ./argocd-cm.yaml

@@ -8,7 +8,7 @@ spec:
     namespace: default
     server: 'https://kubernetes.default.svc'
   source:
-    path: deploy/argocd/apps
+    path: deploy/argocd/apps # deploys oom and trace apps 
     repoURL: 'https://github.com/EHSchmitt4395/grafana-argo.git'
     targetRevision: HEAD
   sources: []
