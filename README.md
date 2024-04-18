@@ -1,4 +1,4 @@
-# Grafana-Agent-Demo
+# Grafana-Argo-Ex
 
 ## Overview
 This repository facilitates a fully autonomous deployment of the Grafana agent, complete with metrics scrapers, into a virtual Kubernetes (k8s) environment. This setup is ideal for localized environments like Minikube and k3s. It leverages ArgoCD for orchestrating autonomous Helm deployments and includes tools for encrypting sensitive values.

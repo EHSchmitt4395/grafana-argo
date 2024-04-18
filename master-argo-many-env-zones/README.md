@@ -1,4 +1,4 @@
-# Grafana-Agent-Demo
+# Grafana-Argo-Ex
 
 ## Overview
 matrix gen resources: 
